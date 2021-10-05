@@ -61,6 +61,7 @@ class TaskCard extends StatelessWidget {
                       children: [
                         Obx(
                           () => Checkbox(
+                            // ignore: unrelated_type_equality_checks
                             value: _ctodo.isDone == 1,
                             onChanged: (vale) {
                               if (vale!) {
@@ -88,8 +89,9 @@ class TaskCard extends StatelessWidget {
   }
 
   List<Todo> getTodos(Task task) {
+    // ignore: prefer_final_locals
     List<Todo> _todo = [];
-    for (var item in todos) {
+    for (final Todo item in todos) {
       if (item.taskId == task.id) {
         _todo.add(item);
       }

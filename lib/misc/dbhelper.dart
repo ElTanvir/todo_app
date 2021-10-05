@@ -5,12 +5,12 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
 class DatabaseHelper {
-  static final _dbName = "hasinaPH.db";
-  static final dbVersion = 1;
-  static final hfTable = "HFTable";
-  static final colID = "_ID";
-  static final colTrx = "Trx";
-  static final colCustomer = "Customer";
+  static const _dbName = "hasinaPH.db";
+  static const dbVersion = 1;
+  static const hfTable = "HFTable";
+  static const colID = "_ID";
+  static const colTrx = "Trx";
+  static const colCustomer = "Customer";
 
   DatabaseHelper._privateConstructor();
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
@@ -25,11 +25,10 @@ class DatabaseHelper {
     }
   }
 
-  _initiateDatabase() async {
-    print("DataBase  Init");
-    Directory directory = await getApplicationDocumentsDirectory();
-    String path = join(directory.path, _dbName);
-    print(path);
+  Future<Database> _initiateDatabase() async {
+    final Directory directory = await getApplicationDocumentsDirectory();
+    final String path = join(directory.path, _dbName);
+    // ignore: unnecessary_await_in_return
     return await openDatabase(path, version: dbVersion, onCreate: _onCreateDb);
   }
 
@@ -41,26 +40,25 @@ class DatabaseHelper {
   }
 
   Future insert(String message) async {
-    Database db = await instance.database;
-    String trxID = message;
+    final Database db = await instance.database;
+    final String trxID = message;
 
-    int a;
-    var data = {colTrx: trxID, colCustomer: 'none'};
-    var b = await db.query(hfTable, where: '$colTrx =?', whereArgs: [trxID]);
+    final Map<String, String> data = {colTrx: trxID, colCustomer: 'none'};
+    final b = await db.query(hfTable, where: '$colTrx =?', whereArgs: [trxID]);
 
-    a = await db.insert(hfTable, data);
+    await db.insert(hfTable, data);
   }
 
   Future<List<Map<String, dynamic>>> queryall() async {
-    Database db = await instance.database;
-    List<Map<String, dynamic>> a = await db.query(hfTable);
+    final Database db = await instance.database;
+    final List<Map<String, dynamic>> a = await db.query(hfTable);
     return a;
   }
 
   Future update(String message, String ctname) async {
-    Database db = await instance.database;
-    String trxID = message;
-    var data = {colTrx: trxID, colCustomer: ctname};
+    final Database db = await instance.database;
+    final String trxID = message;
+    final data = {colTrx: trxID, colCustomer: ctname};
     db.update(hfTable, data, where: '$colTrx =?', whereArgs: [trxID]);
   }
 }
